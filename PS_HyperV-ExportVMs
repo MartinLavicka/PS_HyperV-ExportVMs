@@ -1,0 +1,28 @@
+# Hromadny export HyperV-VMs
+#
+
+$export = Get-VM | where {$_.Name -eq 'VM1-test'}
+$export_path = "D:\export"
+
+Write-Host "Vypinam stroj:"
+$vyp = $export | where {$_.Name -eq 'ui420v19-lps'-and $_.State -eq 'Running'}
+$vyp = $vyp.name.ToString().ToUpper()
+foreach ($name in $vyp) {
+    Write-Host $name
+    Stop-VM $name
+    }
+
+Write-Host "Exportuji stroj:"
+$exp = $export.name.ToString().ToUpper()
+foreach ($name in $exp) {
+    Write-Host $name
+    Export-VM $name -Path $export_path
+    }
+
+Write-Host "Zapinam stroj:"
+foreach ($name in $vyp) {
+    Write-Host $name
+    Start-VM $name
+    }
+
+Write-Host "END"
